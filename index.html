@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Time-Bucket Pro</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;900&display=swap');
+
+        :root {
+            --bg-base: #050505;
+            --glass-bg: rgba(25, 25, 25, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.05);
+            --text-main: #ffffff;
+            --text-muted: #888888;
+            
+            /* Cinematic Accents */
+            --glow-gaming: rgba(0, 195, 255, 0.3);
+            --glow-story: rgba(187, 0, 255, 0.3);
+            --glow-vlog: rgba(255, 149, 0, 0.3);
+            --glow-spend: rgba(255, 45, 85, 0.4);
+            --glow-bonus: rgba(48, 209, 88, 0.4);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            background-image: radial-gradient(circle at 50% 0%, #1a1a1a 0%, #050505 70%);
+            color: var(--text-main);
+            margin: 0;
+            padding: 170px 15px 80px 15px; /* Added heavy top padding to prevent tasks hiding under pinned header */
+            min-height: 100vh;
+            -webkit-tap-highlight-color: transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            box-sizing: border-box;
+        }
+
+        /* --- STICKY HEADER WRAPPER --- */
+        .header-pin {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 15px 10px 15px;
+            background: linear-gradient(to bottom, #050505 75%, rgba(5, 5, 5, 0) 100%);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        /* --- SCORE BOARD (THE BUCKET) --- */
+        .bucket-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 20px 30px;
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            transform: translateY(-20px);
+            opacity: 0;
+            animation: slideDown 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bucket-container::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: 50%;
+            transform: translateX(-50%);
+            width: 150px; height: 150px;
+            background: rgba(255, 255, 255, 0.03);
+            filter: blur(50px);
+            border-radius: 50%;
+        }
+
+        .bucket-container h2 {
+            margin: 0;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .bucket-container h1 {
+            font-size: 3.5rem;
+            margin: 5px 0 0 0;
+            font-weight: 900;
+            letter-spacing: -2px;
+            text-shadow: 0 0 20px rgba(255,255,255,0.2);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .pop-animation {
+            transform: scale(1.1) !important;
+            color: #4cd964;
+            text-shadow: 0 0 30px rgba(76, 217, 100, 0.5) !important;
+        }
+
+        /* --- CATEGORY SECTIONS --- */
+        .section-wrapper {
+            width: 100%;
+            max-width: 600px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .section-wrapper:nth-child(2) { animation-delay: 0.1s; }
+        .section-wrapper:nth-child(3) { animation-delay: 0.2s; }
+        .section-wrapper:nth-child(4) { animation-delay: 0.3s; }
+        .section-wrapper:nth-child(5) { animation-delay: 0.4s; }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 30px 0 15px 5px;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 12px;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .title-gaming { color: #00c3ff; }
+        .title-story { color: #bb00ff; }
+        .title-vlog { color: #ff9500; }
+        .title-spend { color: #ff2d55; }
+
+        /* --- GRID & BUTTONS --- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+        }
+
+        button {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            padding: 20px 15px;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        button span.time {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 700;
+            background: rgba(255,255,255,0.05);
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        @media (hover: hover) {
+            button:hover {
+                background: rgba(255, 255, 255, 0.08);
+                transform: translateY(-3px);
+                border-color: rgba(255, 255, 255, 0.15);
+            }
+            .btn-gaming:hover { box-shadow: 0 10px 20px var(--glow-gaming); }
+            .btn-story:hover { box-shadow: 0 10px 20px var(--glow-story); }
+            .btn-vlog:hover { box-shadow: 0 10px 20px var(--glow-vlog); }
+            .btn-spend:hover { box-shadow: 0 10px 20px var(--glow-spend); }
+        }
+
+        button:active {
+            transform: scale(0.95);
+            filter: brightness(1.2);
+        }
+
+        .bonus-btn {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, rgba(48,209,88,0.1), rgba(48,209,88,0.02));
+            border-color: rgba(48,209,88,0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .bonus-btn span.time { color: #30d158; background: rgba(48,209,88,0.15); }
+
+        .btn-spend {
+            background: linear-gradient(135deg, rgba(255,45,85,0.1), rgba(255,45,85,0.02));
+            border-color: rgba(255,45,85,0.2);
+        }
+        .btn-spend span.time { color: #ff2d55; background: rgba(255,45,85,0.15); }
+
+        /* --- ANIMATIONS --- */
+        @keyframes slideDown {
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeUp {
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (max-width: 400px) {
+            .grid { grid-template-columns: 1fr; }
+            .bucket-container h1 { font-size: 3rem; }
+            body { padding-top: 150px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PINNED TOP CONTAINER -->
+    <div class="header-pin">
+        <div class="bucket-container">
+            <h2>Available Time</h2>
+            <h1 id="scoreDisplay">0h 0m</h1>
+        </div>
+    </div>
+
+    <!-- GAMING CHANNEL -->
+    <div class="section-wrapper">
+        <div class="section-title title-gaming">Gaming Channel</div>
+        <div class="grid">
+            <button class="btn-gaming" onclick="addPoints(30)">R&D / Mod Setup <span class="time">+30m</span></button>
+            <button class="btn-gaming" onclick="addPoints(45)">Script / Outline <span class="time">+45m</span></button>
+            <button class="btn-gaming" onclick="addPoints(60)">Recording Session <span class="time">+1h</span></button>
+            <button class="btn-gaming" onclick="addPoints(90)">Timeline Rough Cut <span class="time">+1.5h</span></button>
+            <button class="btn-gaming" onclick="addPoints(60)">SFX & Visuals <span class="time">+1h</span></button>
+            <button class="btn-gaming" onclick="addPoints(45)">Thumbnail & Upload <span class="time">+45m</span></button>
+        </div>
+    </div>
+
+    <!-- STORY CHANNEL -->
+    <div class="section-wrapper">
+        <div class="section-title title-story">Story Channel</div>
+        <div class="grid">
+            <button class="btn-story" onclick="addPoints(60)">Deep R&D / Story <span class="time">+1h</span></button>
+            <button class="btn-story" onclick="addPoints(60)">Co-op Scripting <span class="time">+1h</span></button>
+            <button class="btn-story" onclick="addPoints(60)">Recording Block <span class="time">+1h</span></button>
+            <button class="btn-story" onclick="addPoints(90)">Pacing & Rough Cut <span class="time">+1.5h</span></button>
+        </div>
+    </div>
+
+    <!-- VLOG CHANNEL -->
+    <div class="section-wrapper">
+        <div class="section-title title-vlog">Vlog Channel</div>
+        <div class="grid">
+            <button class="btn-vlog" onclick="addPoints(45)">Zero-Money Routing <span class="time">+45m</span></button>
+            <button class="btn-vlog" onclick="addPoints(30)">Gear Prep <span class="time">+30m</span></button>
+        </div>
+    </div>
+
+    <!-- REWARDS & BONUS -->
+    <div class="section-wrapper">
+        <div class="section-title title-spend" style="margin-top: 40px;">Rewards & Spending</div>
+        <div class="grid">
+            <button class="bonus-btn" onclick="addPoints(120)">FINAL VIDEO EXPORT <span class="time">+2h</span></button>
+            <button class="btn-spend" onclick="subtractPoints(60)">Watch 1 Episode <span class="time">-1h</span></button>
+            <button class="btn-spend" onclick="subtractPoints(30)">Social Media / YT <span class="time">-30m</span></button>
+        </div>
+    </div>
+
+    <script>
+        let totalMinutes = localStorage.getItem("timeBucketPro") ? parseInt(localStorage.getItem("timeBucketPro")) : 0;
+        const scoreElement = document.getElementById("scoreDisplay");
+        
+        function formatTime(mins) {
+            let h = Math.floor(mins / 60);
+            let m = mins % 60;
+            if (h === 0) return `${m}m`;
+            if (m === 0) return `${h}h`;
+            return `${h}h ${m}m`;
+        }
+
+        function updateDisplay(animate = false) {
+            scoreElement.innerText = formatTime(totalMinutes);
+            localStorage.setItem("timeBucketPro", totalMinutes);
+            
+            if (animate) {
+                scoreElement.classList.remove("pop-animation");
+                void scoreElement.offsetWidth;
+                scoreElement.classList.add("pop-animation");
+                
+                setTimeout(() => {
+                    scoreElement.classList.remove("pop-animation");
+                }, 300);
+            }
+        }
+
+        function addPoints(mins) {
+            if (navigator.vibrate) navigator.vibrate(50); 
+            totalMinutes += mins;
+            updateDisplay(true);
+        }
+
+        function subtractPoints(mins) {
+            if (totalMinutes >= mins) {
+                if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
+                totalMinutes -= mins;
+                scoreElement.style.color = "#ff2d55";
+                updateDisplay(true);
+                setTimeout(() => { scoreElement.style.color = "var(--text-main)"; }, 300);
+            } else {
+                if (navigator.vibrate) navigator.vibrate(200);
+                
+                scoreElement.style.transform = "translateX(-10px)";
+                setTimeout(() => scoreElement.style.transform = "translateX(10px)", 50);
+                setTimeout(() => scoreElement.style.transform = "translateX(-10px)", 100);
+                setTimeout(() => scoreElement.style.transform = "translateX(10px)", 150);
+                setTimeout(() => scoreElement.style.transform = "translateX(0)", 200);
+            }
+        }
+
+        updateDisplay(false);
+    </script>
+</body>
+</html>
