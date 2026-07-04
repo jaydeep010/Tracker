@@ -14,13 +14,13 @@
             --text-main: #ffffff;
             --text-muted: #7c7c8c;
             
-            /* Highly Refined Neon Cinematic Halos */
-            --glow-gaming: rgba(0, 195, 255, 0.15);
-            --glow-story: rgba(187, 0, 255, 0.15);
-            --glow-vlog: rgba(255, 149, 0, 0.15);
-            --glow-admin: rgba(255, 255, 255, 0.1);
-            --glow-spend: rgba(255, 45, 85, 0.2);
-            --glow-bonus: rgba(48, 209, 88, 0.2);
+            /* Cinematic Halos */
+            --glow-gaming: rgba(0, 195, 255, 0.25);
+            --glow-story: rgba(187, 0, 255, 0.25);
+            --glow-vlog: rgba(255, 149, 0, 0.25);
+            --glow-admin: rgba(255, 255, 255, 0.15);
+            --glow-spend: rgba(255, 45, 85, 0.3);
+            --glow-bonus: rgba(48, 209, 88, 0.3);
         }
 
         body {
@@ -160,13 +160,13 @@
             display: flex;
             flex-direction: row;
             align-items: center;
-            justify-content: space-between; /* Pushes text left, time badge right */
+            justify-content: space-between;
             width: 100%;
             box-sizing: border-box;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: background 0.3s, border-color 0.3s, transform 0.3s, box-shadow 0.3s;
             position: relative;
             overflow: hidden;
-            touch-action: manipulation;
+            touch-action: none; /* Allows smooth tracking calculations over system gestures */
         }
 
         button span.time {
@@ -177,50 +177,46 @@
             padding: 6px 14px;
             border-radius: 30px;
             border: 1px solid rgba(255, 255, 255, 0.03);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.3s ease;
         }
 
-        /* --- ADVANCED HOVER & MOBILE AMBIENT ANIMATIONS --- */
+        /* --- DRAG SLIDE HOVER TRACKING EFFECTS --- */
+        button.tracked-glow {
+            background: rgba(30, 30, 45, 0.85) !important;
+            border-color: rgba(255, 255, 255, 0.3) !important;
+            transform: scale(1.02) translateX(4px);
+        }
         
-        /* Desktop Hover Mechanics */
-        @media (hover: hover) {
-            button:hover {
-                color: #ffffff;
-                background: rgba(25, 25, 35, 0.8);
-                border-color: rgba(255, 255, 255, 0.15);
-                transform: translateX(4px); /* Sleek dynamic indent on hover */
-            }
-            .btn-gaming:hover { box-shadow: -4px 0 20px var(--glow-gaming); border-left: 2px solid #00c3ff; }
-            .btn-story:hover { box-shadow: -4px 0 20px var(--glow-story); border-left: 2px solid #bb00ff; }
-            .btn-vlog:hover { box-shadow: -4px 0 20px var(--glow-vlog); border-left: 2px solid #ff9500; }
-            .btn-admin:hover { box-shadow: -4px 0 20px var(--glow-admin); border-left: 2px solid #ffffff; }
-            .btn-spend:hover { box-shadow: -4px 0 20px var(--glow-spend); border-left: 2px solid #ff2d55; }
-            .bonus-btn:hover { box-shadow: -4px 0 20px var(--glow-bonus); border-left: 2px solid #30d158; }
-            
-            button:hover span.time {
-                background: rgba(255, 255, 255, 0.12);
-                transform: scale(1.05);
-            }
+        .btn-gaming.tracked-glow { box-shadow: -6px 0 25px var(--glow-gaming); border-left: 3px solid #00c3ff; }
+        .btn-story.tracked-glow { box-shadow: -6px 0 25px var(--glow-story); border-left: 3px solid #bb00ff; }
+        .btn-vlog.tracked-glow { box-shadow: -6px 0 25px var(--glow-vlog); border-left: 3px solid #ff9500; }
+        .btn-admin.tracked-glow { box-shadow: -6px 0 25px var(--glow-admin); border-left: 3px solid #ffffff; }
+        .btn-spend.tracked-glow { box-shadow: -6px 0 25px var(--glow-spend); border-left: 3px solid #ff2d55; }
+        .bonus-btn.tracked-glow { box-shadow: -6px 0 25px var(--glow-bonus); border-left: 3px solid #30d158; }
+
+        /* --- STYLE FOR CONFIRMATION MODE --- */
+        button.needs-confirm {
+            background: rgba(255, 255, 255, 0.15) !important;
+            border-color: #ffffff !important;
+            animation: blinkState 1s infinite alternate;
+        }
+        button.needs-confirm span.time {
+            background: #ffffff !important;
+            color: #000000 !important;
+            font-weight: 800;
         }
 
-        /* Phone Screen: Continuous Elegant Ambient Pulse (Breathing) */
-        @media (hover: none) {
-            .btn-gaming { animation: mobileGlowGaming 4s ease-in-out infinite alternate; }
-            .btn-story { animation: mobileGlowStory 4s ease-in-out infinite alternate; animation-delay: 0.5s; }
-            .btn-vlog { animation: mobileGlowVlog 4s ease-in-out infinite alternate; animation-delay: 1s; }
-            .btn-admin { animation: mobileGlowAdmin 4s ease-in-out infinite alternate; animation-delay: 1.5s; }
-            .btn-spend { animation: mobileGlowSpend 4s ease-in-out infinite alternate; }
-            .bonus-btn { animation: mobileGlowBonus 4s ease-in-out infinite alternate; }
+        @keyframes blinkState {
+            0% { opacity: 0.9; }
+            100% { opacity: 1; box-shadow: 0 0 15px rgba(255,255,255,0.1); }
         }
 
-        /* Tactile Push Animation on Actual Press */
+        /* Tactile Push Animation on Actual Press Line */
         button:active {
             transform: scale(0.97) translateX(0px) !important;
-            filter: brightness(1.3);
-            background: rgba(255, 255, 255, 0.1) !important;
         }
 
-        /* --- PRE-SET AMBIENT GLOW MASKS --- */
+        /* Ambient Presets */
         .bonus-btn {
             background: linear-gradient(90deg, rgba(48,209,88,0.06), rgba(18,18,24,0.6));
             border-color: rgba(48,209,88,0.15);
@@ -233,38 +229,8 @@
         }
         .btn-spend span.time { color: #ff2d55; background: rgba(255,45,85,0.1); border-color: rgba(255,45,85,0.2); }
 
-        /* --- MOBILE ANIMATION FRAMES --- */
-        @keyframes mobileGlowGaming {
-            0% { box-shadow: inset 2px 0 0 rgba(0, 195, 255, 0.2); border-color: var(--glass-border); }
-            100% { box-shadow: inset 4px 0 12px var(--glow-gaming); border-color: rgba(0, 195, 255, 0.2); }
-        }
-        @keyframes mobileGlowStory {
-            0% { box-shadow: inset 2px 0 0 rgba(187, 0, 255, 0.2); border-color: var(--glass-border); }
-            100% { box-shadow: inset 4px 0 12px var(--glow-story); border-color: rgba(187, 0, 255, 0.2); }
-        }
-        @keyframes mobileGlowVlog {
-            0% { box-shadow: inset 2px 0 0 rgba(255, 149, 0, 0.2); border-color: var(--glass-border); }
-            100% { box-shadow: inset 4px 0 12px var(--glow-vlog); border-color: rgba(255, 149, 0, 0.2); }
-        }
-        @keyframes mobileGlowAdmin {
-            0% { box-shadow: inset 2px 0 0 rgba(255, 255, 255, 0.1); border-color: var(--glass-border); }
-            100% { box-shadow: inset 4px 0 12px var(--glow-admin); border-color: rgba(255, 255, 255, 0.15); }
-        }
-        @keyframes mobileGlowSpend {
-            0% { box-shadow: inset 2px 0 0 rgba(255, 45, 85, 0.2); border-color: rgba(255, 45, 85, 0.12); }
-            100% { box-shadow: inset 4px 0 15px var(--glow-spend); border-color: rgba(255, 45, 85, 0.3); }
-        }
-        @keyframes mobileGlowBonus {
-            0% { box-shadow: inset 2px 0 0 rgba(48, 209, 88, 0.2); border-color: rgba(48, 209, 88, 0.15); }
-            100% { box-shadow: inset 4px 0 15px var(--glow-bonus); border-color: rgba(48, 209, 88, 0.3); }
-        }
-
-        @keyframes slideDown {
-            to { transform: translateY(0); opacity: 1; }
-        }
-        @keyframes fadeUp {
-            to { transform: translateY(0); opacity: 1; }
-        }
+        @keyframes slideDown { to { transform: translateY(0); opacity: 1; } }
+        @keyframes fadeUp { to { transform: translateY(0); opacity: 1; } }
 
         @media (max-width: 480px) {
             body { padding-top: 155px; padding-left: 12px; padding-right: 12px; }
@@ -285,59 +251,60 @@
     <div class="section-wrapper">
         <div class="section-title title-gaming">ZEUTOS</div>
         <div class="grid">
-            <button class="btn-gaming" onclick="addPoints(30)">R&D <span class="time">+30m</span></button>
-            <button class="btn-gaming" onclick="addPoints(30)">Mod & Setup <span class="time">+30m</span></button>
-            <button class="btn-gaming" onclick="addPoints(45)">Script-Outline <span class="time">+45m</span></button>
-            <button class="btn-gaming" onclick="addPoints(120)">Recording Session <span class="time">+2h</span></button>
-            <button class="btn-gaming" onclick="addPoints(120)">Timeline Cut <span class="time">+2h</span></button>
-            <button class="btn-gaming" onclick="addPoints(120)">SFX & Visuals <span class="time">+2h</span></button>
-            <button class="btn-gaming" onclick="addPoints(45)">Thumbnail-Seo-Upload <span class="time">+45m</span></button>
+            <button class="btn-gaming" data-label="R&D" data-time="+30m" onclick="handleTap(this, 'add', 30)">R&D <span class="time">+30m</span></button>
+            <button class="btn-gaming" data-label="Mod & Setup" data-time="+30m" onclick="handleTap(this, 'add', 30)">Mod & Setup <span class="time">+30m</span></button>
+            <button class="btn-gaming" data-label="Script-Outline" data-time="+45m" onclick="handleTap(this, 'add', 45)">Script-Outline <span class="time">+45m</span></button>
+            <button class="btn-gaming" data-label="Recording Session" data-time="+2h" onclick="handleTap(this, 'add', 120)">Recording Session <span class="time">+2h</span></button>
+            <button class="btn-gaming" data-label="Timeline Cut" data-time="+2h" onclick="handleTap(this, 'add', 120)">Timeline Cut <span class="time">+2h</span></button>
+            <button class="btn-gaming" data-label="SFX & Visuals" data-time="+2h" onclick="handleTap(this, 'add', 120)">SFX & Visuals <span class="time">+2h</span></button>
+            <button class="btn-gaming" data-label="Thumbnail-Seo-Upload" data-time="+45m" onclick="handleTap(this, 'add', 45)">Thumbnail-Seo-Upload <span class="time">+45m</span></button>
         </div>
     </div>
 
     <div class="section-wrapper">
         <div class="section-title title-story">A Missing Chapter</div>
         <div class="grid">
-            <button class="btn-story" onclick="addPoints(60)">R&D-Story <span class="time">+1h</span></button>
-            <button class="btn-story" onclick="addPoints(120)">Scripting <span class="time">+2h</span></button>
-            <button class="btn-story" onclick="addPoints(60)">Recording/day <span class="time">+1h</span></button>
-            <button class="btn-story" onclick="addPoints(120)">Timeline Cut <span class="time">+2h</span></button>
+            <button class="btn-story" data-label="R&D-Story" data-time="+1h" onclick="handleTap(this, 'add', 60)">R&D-Story <span class="time">+1h</span></button>
+            <button class="btn-story" data-label="Scripting" data-time="+2h" onclick="handleTap(this, 'add', 120)">Scripting <span class="time">+2h</span></button>
+            <button class="btn-story" data-label="Recording/day" data-time="+1h" onclick="handleTap(this, 'add', 60)">Recording/day <span class="time">+1h</span></button>
+            <button class="btn-story" data-label="Timeline Cut" data-time="+2h" onclick="handleTap(this, 'add', 120)">Timeline Cut <span class="time">+2h</span></button>
         </div>
     </div>
 
     <div class="section-wrapper">
         <div class="section-title title-vlog">Coming PRJ</div>
         <div class="grid">
-            <button class="btn-vlog" onclick="addPoints(60)">R&D <span class="time">+1h</span></button>
-            <button class="btn-vlog" onclick="addPoints(30)">Gear Prep <span class="time">+30m</span></button>
-            <button class="btn-vlog" onclick="addPoints(180)">Shoot <span class="time">+3h</span></button>
-            <button class="btn-vlog" onclick="addPoints(120)">Timeline Cut <span class="time">+2h</span></button>
-            <button class="btn-vlog" onclick="addPoints(120)">SFX & Visuals <span class="time">+2h</span></button>
+            <button class="btn-vlog" data-label="R&D" data-time="+1h" onclick="handleTap(this, 'add', 60)">R&D <span class="time">+1h</span></button>
+            <button class="btn-vlog" data-label="Gear Prep" data-time="+30m" onclick="handleTap(this, 'add', 30)">Gear Prep <span class="time">+30m</span></button>
+            <button class="btn-vlog" data-label="Shoot" data-time="+3h" onclick="handleTap(this, 'add', 180)">Shoot <span class="time">+3h</span></button>
+            <button class="btn-vlog" data-label="Timeline Cut" data-time="+2h" onclick="handleTap(this, 'add', 120)">Timeline Cut <span class="time">+2h</span></button>
+            <button class="btn-vlog" data-label="SFX & Visuals" data-time="+2h" onclick="handleTap(this, 'add', 120)">SFX & Visuals <span class="time">+2h</span></button>
         </div>
     </div>
     
     <div class="section-wrapper">
         <div class="section-title title-admin">Admin</div>
         <div class="grid">
-            <button class="btn-admin" onclick="addPoints(30)">Organizing Things <span class="time">+30m</span></button>
-            <button class="btn-admin" onclick="addPoints(45)">Pure Uninterrupted work <span class="time">+45m</span></button>
+            <button class="btn-admin" data-label="Organizing Things" data-time="+30m" onclick="handleTap(this, 'add', 30)">Organizing Things <span class="time">+30m</span></button>
+            <button class="btn-admin" data-label="Pure Uninterrupted work" data-time="+45m" onclick="handleTap(this, 'add', 45)">Pure Uninterrupted work <span class="time">+45m</span></button>
         </div>
     </div>
 
     <div class="section-wrapper">
         <div class="section-title title-spend" style="margin-top: 40px;">Rewards & Spending</div>
         <div class="grid">
-            <button class="bonus-btn" onclick="addPoints(120)">FINAL VIDEO EXPORT <span class="time">+2h</span></button>
-            <button class="btn-spend" onclick="subtractPoints(60)">1Ep <span class="time">-1h</span></button>
-            <button class="btn-spend" onclick="subtractPoints(30)">YT <span class="time">-30m</span></button>
-            <button class="btn-spend" onclick="subtractPoints(180)">:( <span class="time">-3h</span></button>
+            <button class="bonus-btn" data-label="FINAL VIDEO EXPORT" data-time="+2h" onclick="handleTap(this, 'add', 120)">FINAL VIDEO EXPORT <span class="time">+2h</span></button>
+            <button class="btn-spend" data-label="1Ep" data-time="-1h" onclick="handleTap(this, 'subtract', 60)">1Ep <span class="time">-1h</span></button>
+            <button class="btn-spend" data-label="YT" data-time="-30m" onclick="handleTap(this, 'subtract', 30)">YT <span class="time">-30m</span></button>
+            <button class="btn-spend" data-label=":(" data-time="-3h" onclick="handleTap(this, 'subtract', 180)">:( <span class="time">-3h</span></button>
         </div>
     </div>
 
     <script>
         let totalMinutes = localStorage.getItem("timeBucketPro") ? parseInt(localStorage.getItem("timeBucketPro")) : 0;
         const scoreElement = document.getElementById("scoreDisplay");
-        
+        let activeConfirmButton = null;
+
         function formatTime(mins) {
             let h = Math.floor(mins / 60);
             let m = mins % 60;
@@ -354,36 +321,94 @@
                 scoreElement.classList.remove("pop-animation");
                 void scoreElement.offsetWidth;
                 scoreElement.classList.add("pop-animation");
-                
-                setTimeout(() => {
-                    scoreElement.classList.remove("pop-animation");
-                }, 300);
+                setTimeout(() => scoreElement.classList.remove("pop-animation"), 300);
             }
         }
 
-        function addPoints(mins) {
-            if (navigator.vibrate) navigator.vibrate(50); 
-            totalMinutes += mins;
-            updateDisplay(true);
-        }
+        // --- TWO-STEP TAP TO CONFIRMATION ARCHITECTURE ---
+        function handleTap(button, action, value) {
+            // If this button is not primed for confirmation yet
+            if (activeConfirmButton !== button) {
+                resetConfirmation(); // Clear out any previous active confirm state
+                
+                activeConfirmButton = button;
+                button.classList.add("needs-confirm");
+                
+                // Dynamically transform text inside button to alert state
+                let labelNode = button.childNodes[0];
+                if (labelNode.nodeType === Node.TEXT_NODE) {
+                    labelNode.textContent = "Confirm Payout? ";
+                } else {
+                    button.innerHTML = `Confirm Payout? <span class="time">${button.getAttribute('data-time')}</span>`;
+                }
+                
+                if (navigator.vibrate) navigator.vibrate(20);
+                return;
+            }
 
-        function subtractPoints(mins) {
-            if (totalMinutes >= mins) {
-                if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
-                totalMinutes -= mins;
-                scoreElement.style.color = "#ff2d55";
+            // Executed on SECOND click
+            if (action === 'add') {
+                totalMinutes += value;
+                if (navigator.vibrate) navigator.vibrate(50);
                 updateDisplay(true);
-                setTimeout(() => { scoreElement.style.color = "var(--text-main)"; }, 300);
-            } else {
-                if (navigator.vibrate) navigator.vibrate(200);
-                
-                scoreElement.style.transform = "translateX(-10px)";
-                setTimeout(() => scoreElement.style.transform = "translateX(10px)", 50);
-                setTimeout(() => scoreElement.style.transform = "translateX(-10px)", 100);
-                setTimeout(() => scoreElement.style.transform = "translateX(10px)", 150);
-                setTimeout(() => scoreElement.style.transform = "translateX(0)", 200);
+            } else if (action === 'subtract') {
+                if (totalMinutes >= value) {
+                    totalMinutes -= value;
+                    if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
+                    scoreElement.style.color = "#ff2d55";
+                    updateDisplay(true);
+                    setTimeout(() => { scoreElement.style.color = "var(--text-main)"; }, 300);
+                } else {
+                    if (navigator.vibrate) navigator.vibrate(200);
+                    scoreElement.style.transform = "translateX(-10px)";
+                    setTimeout(() => scoreElement.style.transform = "translateX(10px)", 50);
+                    setTimeout(() => scoreElement.style.transform = "translateX(-10px)", 100);
+                    setTimeout(() => scoreElement.style.transform = "translateX(10px)", 150);
+                    setTimeout(() => scoreElement.style.transform = "translateX(0)", 200);
+                }
+            }
+            resetConfirmation();
+        }
+
+        function resetConfirmation() {
+            if (activeConfirmButton) {
+                let origLabel = activeConfirmButton.getAttribute("data-label");
+                let origTime = activeConfirmButton.getAttribute("data-time");
+                activeConfirmButton.innerHTML = `${origLabel} <span class="time">${origTime}</span>`;
+                activeConfirmButton.classList.remove("needs-confirm");
+                activeConfirmButton = null;
             }
         }
+
+        // Cancel configuration checks when clicking general empty backgrounds
+        document.addEventListener("pointerdown", function(e) {
+            if (!e.target.closest("button")) {
+                resetConfirmation();
+            }
+        });
+
+        // --- CONTINUOUS FINGER SLIDE HIT-DETECTION MONITOR ---
+        function runTouchTracker(e) {
+            // Extract finger location matrix points
+            let touch = e.touches[0];
+            let targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
+            
+            // Clean out current highlights across the layout
+            document.querySelectorAll("button").forEach(btn => btn.classList.remove("tracked-glow"));
+            
+            // Apply glow if finger is over a tracker point target box
+            if (targetEl) {
+                let buttonParent = targetEl.closest("button");
+                if (buttonParent) {
+                    buttonParent.classList.add("tracked-glow");
+                }
+            }
+        }
+
+        document.addEventListener("touchmove", runTouchTracker, { passive: true });
+        document.addEventListener("touchend", () => {
+            document.querySelectorAll("button").forEach(btn => btn.classList.remove("tracked-glow"));
+        });
 
         updateDisplay(false);
     </script>
