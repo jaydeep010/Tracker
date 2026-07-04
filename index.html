@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Time-Bucket Pro</title>
+    <title>TrackJack</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;900&display=swap');
 
@@ -233,41 +233,55 @@
     <!-- PINNED TOP CONTAINER -->
     <div class="header-pin">
         <div class="bucket-container">
-            <h2>Available Time</h2>
+            <h2>Available</h2>
             <h1 id="scoreDisplay">0h 0m</h1>
         </div>
     </div>
 
     <!-- GAMING CHANNEL -->
     <div class="section-wrapper">
-        <div class="section-title title-gaming">Gaming Channel</div>
+        <div class="section-title title-gaming">ZEUTOS</div>
         <div class="grid">
-            <button class="btn-gaming" onclick="addPoints(30)">R&D / Mod Setup <span class="time">+30m</span></button>
-            <button class="btn-gaming" onclick="addPoints(45)">Script / Outline <span class="time">+45m</span></button>
-            <button class="btn-gaming" onclick="addPoints(60)">Recording Session <span class="time">+1h</span></button>
-            <button class="btn-gaming" onclick="addPoints(90)">Timeline Rough Cut <span class="time">+1.5h</span></button>
-            <button class="btn-gaming" onclick="addPoints(60)">SFX & Visuals <span class="time">+1h</span></button>
-            <button class="btn-gaming" onclick="addPoints(45)">Thumbnail & Upload <span class="time">+45m</span></button>
+            <button class="btn-gaming" onclick="addPoints(30)">R&D <span class="time">+30m</span></button>
+            <button class="btn-gaming" onclick="addPoints(30)">Mod & Setup <span class="time">+30m</span></button>
+            <button class="btn-gaming" onclick="addPoints(45)">Script-Outline <span class="time">+45m</span></button>
+            <button class="btn-gaming" onclick="addPoints(120)">Recording Session <span class="time">+2h</span></button>
+            <button class="btn-gaming" onclick="addPoints(120)">Timeline Cut <span class="time">+2h</span></button>
+            <button class="btn-gaming" onclick="addPoints(120)">SFX & Visuals <span class="time">+2h</span></button>
+            <button class="btn-gaming" onclick="addPoints(45)">Thumbnail-Seo-Upload <span class="time">+45m</span></button>
         </div>
     </div>
 
     <!-- STORY CHANNEL -->
     <div class="section-wrapper">
-        <div class="section-title title-story">Story Channel</div>
+        <div class="section-title title-story">A Missing Chapter</div>
         <div class="grid">
-            <button class="btn-story" onclick="addPoints(60)">Deep R&D / Story <span class="time">+1h</span></button>
-            <button class="btn-story" onclick="addPoints(60)">Co-op Scripting <span class="time">+1h</span></button>
-            <button class="btn-story" onclick="addPoints(60)">Recording Block <span class="time">+1h</span></button>
-            <button class="btn-story" onclick="addPoints(90)">Pacing & Rough Cut <span class="time">+1.5h</span></button>
+            <button class="btn-story" onclick="addPoints(60)">R&D-Story <span class="time">+1h</span></button>
+            <button class="btn-story" onclick="addPoints(120)">Scripting <span class="time">+2h</span></button>
+            <button class="btn-story" onclick="addPoints(60)">Recording/day <span class="time">+1h</span></button>
+            <button class="btn-story" onclick="addPoints(120)">Timeline Cut <span class="time">+2h</span></button>
         </div>
     </div>
 
     <!-- VLOG CHANNEL -->
     <div class="section-wrapper">
-        <div class="section-title title-vlog">Vlog Channel</div>
+        <div class="section-title title-vlog">Coming PRJ</div>
         <div class="grid">
-            <button class="btn-vlog" onclick="addPoints(45)">Zero-Money Routing <span class="time">+45m</span></button>
+            <button class="btn-vlog" onclick="addPoints(60)">R&D <span class="time">+1h</span></button>
             <button class="btn-vlog" onclick="addPoints(30)">Gear Prep <span class="time">+30m</span></button>
+            <button class="btn-vlog" onclick="addPoints(180)">Shoot <span class="time">+3h</span></button>
+            <button class="btn-vlog" onclick="addPoints(120)">Timeline Cut <span class="time">+2h</span></button>
+            <button class="btn-vlog" onclick="addPoints(120)">SFX & Visuals <span class="time">+2h</span></button>
+        </div>
+    </div>
+    
+    <!-- Extraas -->
+    <div class="section-wrapper">
+        <div class="section-title title-admin">Admin</div>
+        <div class="grid">
+            <button class="btn-admin" onclick="addPoints(30)">Organizing Things <span class="time">+30m</span></button>
+            <button class="btn-admin" onclick="addPoints(45)">Pure Uninterrupted work <span class="time">+45m</span></button>
+            
         </div>
     </div>
 
@@ -276,8 +290,9 @@
         <div class="section-title title-spend" style="margin-top: 40px;">Rewards & Spending</div>
         <div class="grid">
             <button class="bonus-btn" onclick="addPoints(120)">FINAL VIDEO EXPORT <span class="time">+2h</span></button>
-            <button class="btn-spend" onclick="subtractPoints(60)">Watch 1 Episode <span class="time">-1h</span></button>
-            <button class="btn-spend" onclick="subtractPoints(30)">Social Media / YT <span class="time">-30m</span></button>
+            <button class="btn-spend" onclick="subtractPoints(60)">1Ep <span class="time">-1h</span></button>
+            <button class="btn-spend" onclick="subtractPoints(30)">YT <span class="time">-30m</span></button>
+            <button class="btn-spend" onclick="subtractPoints(180)">:( <span class="time">-3h</span></button>
         </div>
     </div>
 
