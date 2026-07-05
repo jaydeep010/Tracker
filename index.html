@@ -464,6 +464,29 @@
             osc.stop(now + 0.35);
         }
 
+        function playCancelSound() {
+            initAudio();
+            if (!audioCtx) return;
+
+            let now = audioCtx.currentTime;
+            let osc = audioCtx.createOscillator();
+            let gain = audioCtx.createGain();
+
+            osc.type = 'square';
+
+            // Clean, quick retro cancellation blip
+            osc.frequency.setValueAtTime(329.63, now); // E4
+            osc.frequency.setValueAtTime(220.00, now + 0.06); // A3
+
+            gain.gain.setValueAtTime(0.06, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now);
+            osc.stop(now + 0.2);
+        }
+
         function playErrorSound() {
             initAudio();
             if (!audioCtx) return;
@@ -558,6 +581,8 @@
             const parentButton = element.closest("button");
             parentButton.classList.remove("confirming");
             if (activeShieldTimeout) clearTimeout(activeShieldTimeout);
+            if (navigator.vibrate) navigator.vibrate(30);
+            playCancelSound();
         }
 
         /* --- FINGER TRACKING GLOW ENGINE --- */
