@@ -9,17 +9,24 @@
 
         :root {
             --bg-base: #030305;
-            --glass-bg: rgba(18, 18, 24, 0.65);
-            --glass-border: rgba(255, 255, 255, 0.04);
+            --glass-bg: rgba(14, 14, 22, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.05);
             --text-main: #ffffff;
             --text-muted: #7c7c8c;
             
-            --glow-gaming: rgba(0, 195, 255, 0.25);
-            --glow-story: rgba(187, 0, 255, 0.25);
-            --glow-vlog: rgba(255, 149, 0, 0.25);
-            --glow-admin: rgba(255, 255, 255, 0.15);
-            --glow-spend: rgba(255, 45, 85, 0.3);
-            --glow-bonus: rgba(48, 209, 88, 0.3);
+            --c-gaming: #00c3ff;
+            --c-story: #bb00ff;
+            --c-vlog: #ff9500;
+            --c-admin: #ffffff;
+            --c-spend: #ff2d55;
+            --c-bonus: #30d158;
+
+            --glow-gaming: rgba(0, 195, 255, 0.15);
+            --glow-story: rgba(187, 0, 255, 0.15);
+            --glow-vlog: rgba(255, 149, 0, 0.15);
+            --glow-admin: rgba(255, 255, 255, 0.08);
+            --glow-spend: rgba(255, 45, 85, 0.18);
+            --glow-bonus: rgba(48, 209, 88, 0.18);
         }
 
         body {
@@ -144,30 +151,30 @@
             background: linear-gradient(to right, rgba(255,255,255,0.1), transparent);
         }
 
-        .title-gaming { color: #00c3ff; }
-        .title-story { color: #bb00ff; }
-        .title-vlog { color: #ff9500; }
-        .title-admin { color: #ffffff; }
-        .title-spend { color: #ff2d55; }
+        .title-gaming { color: var(--c-gaming); }
+        .title-story { color: var(--c-story); }
+        .title-vlog { color: var(--c-vlog); }
+        .title-admin { color: var(--c-admin); }
+        .title-spend { color: var(--c-spend); }
 
         .grid {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
             width: 100%;
         }
 
-        /* --- TASK ELEMENTS --- */
+        /* --- BUTTONS WITH BALANCED MIRRORED GLOW --- */
         button {
             background: var(--glass-bg);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             border: 1px solid var(--glass-border);
-            color: rgba(255, 255, 255, 0.85);
+            color: rgba(255, 255, 255, 0.9);
             padding: 18px 24px;
             border-radius: 18px;
             font-size: 1rem;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             display: flex;
             flex-direction: row;
@@ -179,46 +186,73 @@
             position: relative;
             overflow: hidden;
             touch-action: manipulation;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
         }
+
+        /* Symmetrical Edge-to-Edge Fluid Gradient Architecture */
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        
+        .btn-gaming::before { background: linear-gradient(90deg, rgba(0,195,255,0.08) 0%, transparent 18%, transparent 82%, rgba(0,195,255,0.08) 100%); }
+        .btn-story::before { background: linear-gradient(90deg, rgba(187,0,255,0.08) 0%, transparent 18%, transparent 82%, rgba(187,0,255,0.08) 100%); }
+        .btn-vlog::before { background: linear-gradient(90deg, rgba(255,149,0,0.08) 0%, transparent 18%, transparent 82%, rgba(255,149,0,0.08) 100%); }
+        .btn-admin::before { background: linear-gradient(90deg, rgba(255,255,255,0.04) 0%, transparent 18%, transparent 82%, rgba(255,255,255,0.04) 100%); }
+        .btn-spend::before { background: linear-gradient(90deg, rgba(255,45,85,0.08) 0%, transparent 18%, transparent 82%, rgba(255,45,85,0.08) 100%); }
+        .bonus-btn::before { background: linear-gradient(90deg, rgba(48,209,88,0.08) 0%, transparent 18%, transparent 82%, rgba(48,209,88,0.08) 100%); }
 
         button .btn-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
             width: 100%;
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s;
+            z-index: 2;
         }
 
         button span.time {
             font-size: 0.8rem;
             color: var(--text-main);
-            font-weight: 700;
+            font-weight: 800;
             background: rgba(255, 255, 255, 0.06);
             padding: 6px 14px;
             border-radius: 30px;
             border: 1px solid rgba(255, 255, 255, 0.03);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
         }
 
-        /* --- SHIELD CONFIRMATION ENGINE OVERLAY --- */
+        .bonus-btn span.time { color: var(--c-bonus); background: rgba(48, 209, 88, 0.08); border-color: rgba(48, 209, 88, 0.15); }
+        .btn-spend span.time { color: var(--c-spend); background: rgba(255, 45, 85, 0.08); border-color: rgba(255, 45, 85, 0.15); }
+
+        /* --- MODERN CYBER-PILL CONFIRMATION PANEL --- */
         button .confirm-overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             display: flex;
+            gap: 10px;
+            padding: 8px 12px;
+            box-sizing: border-box;
             opacity: 0;
             pointer-events: none;
-            transform: translateY(100%);
+            transform: scale(0.92) translateY(15px);
             transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 5;
+            background: rgba(4, 4, 6, 0.92);
         }
 
         button.confirming .btn-content {
-            transform: translateY(-100%);
+            transform: scale(0.9) translateY(-15px);
             opacity: 0;
         }
 
         button.confirming .confirm-overlay {
             opacity: 1;
             pointer-events: auto;
-            transform: translateY(0);
+            transform: scale(1) translateY(0);
         }
 
         .confirm-choice {
@@ -226,49 +260,64 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 700;
-            font-size: 0.95rem;
-            letter-spacing: 1px;
+            font-weight: 900;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
             text-transform: uppercase;
-            transition: background 0.2s;
+            border-radius: 12px;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            box-sizing: border-box;
+            border: 1px solid transparent;
         }
 
-        .choice-yes { background: rgba(48, 209, 88, 0.15); color: #30d158; border-right: 1px solid rgba(255,255,255,0.05); }
-        .choice-yes:active { background: rgba(48, 209, 88, 0.3); }
-        .choice-no { background: rgba(255, 45, 85, 0.12); color: #ff2d55; }
-        .choice-no:active { background: rgba(255, 45, 85, 0.25); }
+        /* Fluid Pill Action Blocks */
+        .choice-yes { 
+            background: rgba(48, 209, 88, 0.06);
+            color: #30d158; 
+            border-color: rgba(48, 209, 88, 0.25);
+        }
+        .choice-yes:active { 
+            background: #30d158;
+            color: #000000;
+            box-shadow: 0 0 20px rgba(48, 209, 88, 0.5);
+            transform: scale(0.97);
+        }
+        
+        .choice-no { 
+            background: rgba(255, 45, 85, 0.05);
+            color: #ff2d55; 
+            border-color: rgba(255, 45, 85, 0.2);
+        }
+        .choice-no:active { 
+            background: #ff2d55;
+            color: #ffffff;
+            box-shadow: 0 0 20px rgba(255, 45, 85, 0.5);
+            transform: scale(0.97);
+        }
 
-        /* Hover Mechanics for Desktop Only */
+        /* Desktop Micro-Interactions */
         @media (hover: hover) {
             button:hover {
                 color: #ffffff;
-                background: rgba(25, 25, 35, 0.8);
-                border-color: rgba(255, 255, 255, 0.15);
-                transform: translateX(4px);
+                background: rgba(22, 22, 32, 0.85);
+                border-color: rgba(255,255,255,0.12);
             }
-            .btn-gaming:hover { box-shadow: -4px 0 20px var(--glow-gaming); border-left: 2px solid #00c3ff; }
-            .btn-story:hover { box-shadow: -4px 0 20px var(--glow-story); border-left: 2px solid #bb00ff; }
-            .btn-vlog:hover { box-shadow: -4px 0 20px var(--glow-vlog); border-left: 2px solid #ff9500; }
-            .btn-admin:hover { box-shadow: -4px 0 20px var(--glow-admin); border-left: 2px solid #ffffff; }
-            .btn-spend:hover { box-shadow: -4px 0 20px var(--glow-spend); border-left: 2px solid #ff2d55; }
-            .bonus-btn:hover { box-shadow: -4px 0 20px var(--glow-bonus); border-left: 2px solid #30d158; }
+            .btn-gaming:hover { box-shadow: 0 0 20px var(--glow-gaming); }
+            .btn-story:hover { box-shadow: 0 0 20px var(--glow-story); }
+            .btn-vlog:hover { box-shadow: 0 0 20px var(--glow-vlog); }
+            .btn-admin:hover { box-shadow: 0 0 20px var(--glow-admin); }
+            .btn-spend:hover { box-shadow: 0 0 20px var(--glow-spend); }
+            .bonus-btn:hover { box-shadow: 0 0 20px var(--glow-bonus); }
         }
-
-        /* --- BUTTON ACCENTS --- */
-        .bonus-btn { background: linear-gradient(90deg, rgba(48,209,88,0.06), rgba(18,18,24,0.6)); border-color: rgba(48,209,88,0.15); }
-        .bonus-btn span.time { color: #30d158; background: rgba(48,209,88,0.1); border-color: rgba(48,209,88,0.2); }
-
-        .btn-spend { background: linear-gradient(90deg, rgba(255,45,85,0.04), rgba(18,18,24,0.6)); border-color: rgba(255,45,85,0.12); }
-        .btn-spend span.time { color: #ff2d55; background: rgba(255,45,85,0.1); border-color: rgba(255,45,85,0.2); }
-
-        @keyframes slideDown { to { transform: translateY(0); opacity: 1; } }
-        @keyframes fadeUp { to { transform: translateY(0); opacity: 1; } }
 
         @media (max-width: 480px) {
             body { padding-top: 155px; padding-left: 12px; padding-right: 12px; }
             .bucket-container h1 { font-size: 2.8rem; }
-            button { padding: 16px 18px; font-size: 0.95rem; }
+            button { padding: 16px 20px; font-size: 0.95rem; }
         }
+
+        @keyframes slideDown { to { transform: translateY(0); opacity: 1; } }
+        @keyframes fadeUp { to { transform: translateY(0); opacity: 1; } }
     </style>
 </head>
 <body>
@@ -282,6 +331,7 @@
         </div>
     </div>
 
+    <!-- ZEUTOS -->
     <div class="section-wrapper">
         <div class="section-title title-gaming">ZEUTOS</div>
         <div class="grid">
@@ -316,6 +366,7 @@
         </div>
     </div>
 
+    <!-- A MISSING CHAPTER -->
     <div class="section-wrapper">
         <div class="section-title title-story">A Missing Chapter</div>
         <div class="grid">
@@ -338,6 +389,7 @@
         </div>
     </div>
 
+    <!-- COMING PRJ -->
     <div class="section-wrapper">
         <div class="section-title title-vlog">Coming PRJ</div>
         <div class="grid">
@@ -364,6 +416,7 @@
         </div>
     </div>
     
+    <!-- ADMIN -->
     <div class="section-wrapper">
         <div class="section-title title-admin">Admin</div>
         <div class="grid">
@@ -378,8 +431,9 @@
         </div>
     </div>
 
+    <!-- REWARDS & SPENDING -->
     <div class="section-wrapper">
-        <div class="section-title title-spend" style="margin-top: 40px;">Rewards & Spending</div>
+        <div class="section-title title-spend">Rewards & Spending</div>
         <div class="grid">
             <button class="bonus-btn" onclick="triggerShield(this)">
                 <div class="btn-content">FINAL VIDEO EXPORT <span class="time">+2h</span></div>
@@ -406,7 +460,6 @@
         const aura = document.getElementById("touch-glow-aura");
         let activeShieldTimeout = null;
 
-        // Web Audio API Synthesizer Context
         let audioCtx = null;
         function initAudio() {
             if (!audioCtx) {
@@ -414,25 +467,18 @@
             }
         }
 
-        /* --- CLASSIC 8-BIT SQUARE WAVE CHIPTUNE ENGINE --- */
         function playCoinSound() {
             initAudio();
             if (!audioCtx) return;
-            
             let now = audioCtx.currentTime;
             let osc = audioCtx.createOscillator();
             let gain = audioCtx.createGain();
-            
-            osc.type = 'square'; // Raw retro chiptune architecture
-            
-            // Icon 3-stage classic arpeggio coin chime sequence
-            osc.frequency.setValueAtTime(523.25, now); // C5
-            osc.frequency.setValueAtTime(659.25, now + 0.06); // E5
-            osc.frequency.setValueAtTime(987.77, now + 0.12); // B5 (bright finish)
-            
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(523.25, now);
+            osc.frequency.setValueAtTime(659.25, now + 0.06);
+            osc.frequency.setValueAtTime(987.77, now + 0.12);
             gain.gain.setValueAtTime(0.06, now);
             gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
-            
             osc.connect(gain);
             gain.connect(audioCtx.destination);
             osc.start(now);
@@ -442,22 +488,16 @@
         function playSpendSound() {
             initAudio();
             if (!audioCtx) return;
-
             let now = audioCtx.currentTime;
             let osc = audioCtx.createOscillator();
             let gain = audioCtx.createGain();
-            
             osc.type = 'square';
-            
-            // Multi-step cascading descending chip dropout
-            osc.frequency.setValueAtTime(440.00, now); // A4
-            osc.frequency.setValueAtTime(329.63, now + 0.08); // E4
-            osc.frequency.setValueAtTime(220.00, now + 0.16); // A3
-            osc.frequency.linearRampToValueAtTime(80.00, now + 0.35); // Hard sub drop
-            
+            osc.frequency.setValueAtTime(440.00, now);
+            osc.frequency.setValueAtTime(329.63, now + 0.08);
+            osc.frequency.setValueAtTime(220.00, now + 0.16);
+            osc.frequency.linearRampToValueAtTime(80.00, now + 0.35);
             gain.gain.setValueAtTime(0.07, now);
             gain.gain.linearRampToValueAtTime(0.001, now + 0.35);
-            
             osc.connect(gain);
             gain.connect(audioCtx.destination);
             osc.start(now);
@@ -467,20 +507,14 @@
         function playCancelSound() {
             initAudio();
             if (!audioCtx) return;
-
             let now = audioCtx.currentTime;
             let osc = audioCtx.createOscillator();
             let gain = audioCtx.createGain();
-
             osc.type = 'square';
-
-            // Clean, quick retro cancellation blip
-            osc.frequency.setValueAtTime(329.63, now); // E4
-            osc.frequency.setValueAtTime(220.00, now + 0.06); // A3
-
+            osc.frequency.setValueAtTime(329.63, now);
+            osc.frequency.setValueAtTime(220.00, now + 0.06);
             gain.gain.setValueAtTime(0.06, now);
             gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
-
             osc.connect(gain);
             gain.connect(audioCtx.destination);
             osc.start(now);
@@ -490,20 +524,14 @@
         function playErrorSound() {
             initAudio();
             if (!audioCtx) return;
-
             let now = audioCtx.currentTime;
             let osc = audioCtx.createOscillator();
             let gain = audioCtx.createGain();
-            
             osc.type = 'square';
-            
-            // Low arcade error buzz tone
             osc.frequency.setValueAtTime(110.00, now);
             osc.frequency.setValueAtTime(90.00, now + 0.07);
-            
             gain.gain.setValueAtTime(0.08, now);
             gain.gain.linearRampToValueAtTime(0.001, now + 0.22);
-            
             osc.connect(gain);
             gain.connect(audioCtx.destination);
             osc.start(now);
@@ -530,9 +558,8 @@
             }
         }
 
-        /* --- SHIELD CONFIRMATION ENGINE --- */
         function triggerShield(buttonElement) {
-            initAudio(); // Captures interaction to instantly wake up audio element context on mobile
+            initAudio();
             if (buttonElement.classList.contains("confirming")) return;
             
             document.querySelectorAll("button.confirming").forEach(btn => btn.classList.remove("confirming"));
@@ -585,24 +612,15 @@
             playCancelSound();
         }
 
-        /* --- FINGER TRACKING GLOW ENGINE --- */
         function updateGlowPosition(e) {
             const touch = e.touches[0];
             aura.style.opacity = "1";
             aura.style.background = `radial-gradient(120px circle at ${touch.clientX}px ${touch.clientY}px, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.04) 40%, transparent 100%)`;
         }
 
-        window.addEventListener("touchstart", (e) => {
-            updateGlowPosition(e);
-        }, { passive: true });
-
-        window.addEventListener("touchmove", (e) => {
-            updateGlowPosition(e);
-        }, { passive: true });
-
-        window.addEventListener("touchend", () => {
-            aura.style.opacity = "0";
-        });
+        window.addEventListener("touchstart", (e) => { updateGlowPosition(e); }, { passive: true });
+        window.addEventListener("touchmove", (e) => { updateGlowPosition(e); }, { passive: true });
+        window.addEventListener("touchend", () => { aura.style.opacity = "0"; });
 
         updateDisplay(false);
     </script>
