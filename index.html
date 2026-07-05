@@ -48,7 +48,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            pointer-events: none; /* Crucial: Allows flawless page scroll passing underneath */
+            pointer-events: none;
             z-index: 9999;
             mix-blend-mode: screen;
             opacity: 0;
@@ -157,7 +157,7 @@
             width: 100%;
         }
 
-        /* --- PREMIUM SINGLE ROW TASK ELEMENTS --- */
+        /* --- TASK ELEMENTS --- */
         button {
             background: var(--glass-bg);
             backdrop-filter: blur(15px);
@@ -405,7 +405,88 @@
         const scoreElement = document.getElementById("scoreDisplay");
         const aura = document.getElementById("touch-glow-aura");
         let activeShieldTimeout = null;
-        
+
+        // Web Audio API Synthesizer Context
+        let audioCtx = null;
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        /* --- CLASSIC 8-BIT SQUARE WAVE CHIPTUNE ENGINE --- */
+        function playCoinSound() {
+            initAudio();
+            if (!audioCtx) return;
+            
+            let now = audioCtx.currentTime;
+            let osc = audioCtx.createOscillator();
+            let gain = audioCtx.createGain();
+            
+            osc.type = 'square'; // Raw retro chiptune architecture
+            
+            // Icon 3-stage classic arpeggio coin chime sequence
+            osc.frequency.setValueAtTime(523.25, now); // C5
+            osc.frequency.setValueAtTime(659.25, now + 0.06); // E5
+            osc.frequency.setValueAtTime(987.77, now + 0.12); // B5 (bright finish)
+            
+            gain.gain.setValueAtTime(0.06, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now);
+            osc.stop(now + 0.35);
+        }
+
+        function playSpendSound() {
+            initAudio();
+            if (!audioCtx) return;
+
+            let now = audioCtx.currentTime;
+            let osc = audioCtx.createOscillator();
+            let gain = audioCtx.createGain();
+            
+            osc.type = 'square';
+            
+            // Multi-step cascading descending chip dropout
+            osc.frequency.setValueAtTime(440.00, now); // A4
+            osc.frequency.setValueAtTime(329.63, now + 0.08); // E4
+            osc.frequency.setValueAtTime(220.00, now + 0.16); // A3
+            osc.frequency.linearRampToValueAtTime(80.00, now + 0.35); // Hard sub drop
+            
+            gain.gain.setValueAtTime(0.07, now);
+            gain.gain.linearRampToValueAtTime(0.001, now + 0.35);
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now);
+            osc.stop(now + 0.35);
+        }
+
+        function playErrorSound() {
+            initAudio();
+            if (!audioCtx) return;
+
+            let now = audioCtx.currentTime;
+            let osc = audioCtx.createOscillator();
+            let gain = audioCtx.createGain();
+            
+            osc.type = 'square';
+            
+            // Low arcade error buzz tone
+            osc.frequency.setValueAtTime(110.00, now);
+            osc.frequency.setValueAtTime(90.00, now + 0.07);
+            
+            gain.gain.setValueAtTime(0.08, now);
+            gain.gain.linearRampToValueAtTime(0.001, now + 0.22);
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now);
+            osc.stop(now + 0.22);
+        }
+
         function formatTime(mins) {
             let h = Math.floor(mins / 60);
             let m = mins % 60;
@@ -426,41 +507,43 @@
             }
         }
 
-        /* --- CONFIRMATION CORE SHIELD CONTROLS --- */
+        /* --- SHIELD CONFIRMATION ENGINE --- */
         function triggerShield(buttonElement) {
+            initAudio(); // Captures interaction to instantly wake up audio element context on mobile
             if (buttonElement.classList.contains("confirming")) return;
             
-            // Clear any previously hanging active confirmations out there
             document.querySelectorAll("button.confirming").forEach(btn => btn.classList.remove("confirming"));
             if (activeShieldTimeout) clearTimeout(activeShieldTimeout);
 
             buttonElement.classList.add("confirming");
             
-            // Auto-cancel if left abandoned for 4 seconds
             activeShieldTimeout = setTimeout(() => {
                 buttonElement.classList.remove("confirming");
             }, 4000);
         }
 
         function confirmAction(event, element, actionType, mins) {
-            event.stopPropagation(); // Block from re-triggering parent button clicks
+            event.stopPropagation();
             const parentButton = element.closest("button");
             parentButton.classList.remove("confirming");
             if (activeShieldTimeout) clearTimeout(activeShieldTimeout);
 
             if (actionType === 'add') {
                 if (navigator.vibrate) navigator.vibrate(50); 
+                playCoinSound();
                 totalMinutes += mins;
                 updateDisplay(true);
             } else if (actionType === 'subtract') {
                 if (totalMinutes >= mins) {
                     if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
+                    playSpendSound();
                     totalMinutes -= mins;
                     scoreElement.style.color = "#ff2d55";
                     updateDisplay(true);
                     setTimeout(() => { scoreElement.style.color = "var(--text-main)"; }, 300);
                 } else {
                     if (navigator.vibrate) navigator.vibrate(200);
+                    playErrorSound();
                     scoreElement.style.transform = "translateX(-10px)";
                     setTimeout(() => scoreElement.style.transform = "translateX(10px)", 50);
                     setTimeout(() => scoreElement.style.transform = "translateX(-10px)", 100);
@@ -477,7 +560,7 @@
             if (activeShieldTimeout) clearTimeout(activeShieldTimeout);
         }
 
-        /* --- FINGER TRACKING GLOW ENGINE (SCROLL-SAFE) --- */
+        /* --- FINGER TRACKING GLOW ENGINE --- */
         function updateGlowPosition(e) {
             const touch = e.touches[0];
             aura.style.opacity = "1";
@@ -486,7 +569,7 @@
 
         window.addEventListener("touchstart", (e) => {
             updateGlowPosition(e);
-        }, { passive: true }); // Passive: true ensures mobile touch layout scrolling is completely uninhibited
+        }, { passive: true });
 
         window.addEventListener("touchmove", (e) => {
             updateGlowPosition(e);
